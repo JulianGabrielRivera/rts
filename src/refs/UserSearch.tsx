@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,useRef,useEffect} from 'react';
 
 const users = [{
     name: 'Sarah', age:20},
@@ -6,8 +6,19 @@ const users = [{
     {name: 'Michael', age:20}
 ]
 const UserSearch = () =>{
+    // can put an <any> here too 
+    const inputRef= useRef<HTMLInputElement | null>(null);
     const [name, setName] = useState('');
     const [user,setUser] = useState<{name:string, age:number} | undefined>();
+
+    useEffect(()=>{
+        // check that its defined
+if(!inputRef.current){
+    return;
+}
+inputRef.current.focus()
+
+    },[]);
     const onClick =()=>{
        const foundUser = users.find(user =>{
             return user.name === name
@@ -16,7 +27,7 @@ const UserSearch = () =>{
     }
     
     return <div>User Search
-        <input value={name} onChange={e=> setName(e.target.value)} />
+        <input ref={inputRef} value={name} onChange={e=> setName(e.target.value)} />
         <button onClick={onClick}>Find User</button>
         <div>{user && user.name}
         {user && user.age}</div>
